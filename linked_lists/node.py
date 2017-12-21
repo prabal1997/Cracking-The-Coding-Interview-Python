@@ -2,6 +2,7 @@ class node:
     def __init__(self, input_value=None):
         self.value = input_value;
         self.next = None;
+        self.prev = None;
         
     def add_next(self, input_node):
         self.next = input_node;
