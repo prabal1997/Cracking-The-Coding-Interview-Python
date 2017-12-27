@@ -1,8 +1,12 @@
 class node:
+    #NOTE: this 'node' class is used for trees, linked-lists, and graphs, thus it has many additional fields. We just use the ones we...
+    #...need to depending upon context
     def __init__(self, input_value=None):
         self.value = input_value;
+        self.parent = None;
         self.next = None;
         self.prev = None;
+        self.visited = False;
         
     def add_next(self, input_node):
         self.next = input_node;
@@ -22,7 +26,7 @@ class node:
         print(output_list);
         return output_list;
         
-    def make_list(self, input_container):
+    def make_list(self, input_container, value_type):
         if (not input_container):
             print("ERROR: empty list given.");
             return;
