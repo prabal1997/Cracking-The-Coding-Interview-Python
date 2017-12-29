@@ -14,6 +14,40 @@ class binary_tree:
         
         #set tree attributes
         self.extend_tree(input_array);
+    
+    #searches for a value in the tree, returns the node
+    def search_tree(self, input_value):
+        #handling special case
+        if (not self.root):
+            return None;
+            
+        #searching for the value
+        curr_ref, prev_ref = self.root, self.root;
+        while(curr_ref and curr_ref.value != input_value):
+            prev_ref = curr_ref;
+            curr_ref = (curr_ref.prev if input_value <= curr_ref.value else curr_ref.next);
+            
+        if (not curr_ref):
+            return None;
+        else:
+            return curr_ref;
+    
+    def give_depth(self, node):
+        #handle special case
+        if ( (not self.root) or (not node) ):
+            return float('inf');
+            
+        #try finding node in tree
+        curr, prev, counter = self.root, self.root, 0;
+        while(curr and curr.value!=node.value):
+            prev = curr;
+            curr = (curr.prev if (node.value <= curr.value) else curr.next);
+            counter += 1;
+            
+        if (not curr):
+            return float('inf');
+        else:
+            return counter;
             
     def extend_tree(self, input_array):
         if (input_array):
@@ -63,7 +97,7 @@ class binary_tree:
                 return 1+max(height(input_node.prev), height(input_node.next));
                 
         #return the output
-        return height(self.root);
+        return height(input_node);
             
        
     def inorder_traversal(self):
@@ -148,14 +182,18 @@ class binary_tree:
         print_list = [];
         queue = deque([self.root, None]);
         
-        counter = len(self.ref_list)+1;
-        print(counter);
+        counter = self.give_height()+1;
         while(queue and counter):
             curr_ref = queue.popleft();
+            
+            #check if we have encountered another level
             if (not curr_ref):
+                counter -= 1;
+                
                 print(print_list);
                 print_list = [];
                 queue.append(None);
+                
                 continue;
                 
             new_elements = [curr_ref.prev, curr_ref.next];
@@ -163,7 +201,73 @@ class binary_tree:
             queue.extend(new_elements);
 
             print_list.append(curr_ref.value);
+    #this function returns 'False' if the value couldn't be removed, 'Yes' otherwise
+    def delete_value(self, input_value):
+        #handle the special case
+        if (not self.root):
+            return False;
+        #find the element to be deleted
+        curr, prev = self.root, self.root;
+        while(curr and curr.value!=input_value):
+            prev = curr;
+            if (input_value <= curr.value):
+                curr = curr.prev;
+            else:
+                curr = curr.next;
+                
+        #check the cause of termination
+        if (not curr):
+            return False;
+        
+        else:
 
+            #check if the found node is the root, add a pseduo-node to simplify work
+            is_root = False;
+            if (curr == prev):
+                is_root = True;
+                prev = node(self.root.value-1);
+                prev.next = self.root;
+
+            #change the 'operating' node based on whether 'curr' <= 'prev' or not
+            connect_node = None;
+            if (prev.prev == curr):
+                connect_node = -1;
+            else:
+                connect_node = 1;
+                
+            #re-attach the sub-trees of the removed node
+            replacement_node = None;
+            if (curr.next):
+                min_node = self.give_minimum(curr.next);
+                min_node.prev = curr.prev;
+                
+                replacement_node = curr.next;
+                
+            elif (curr.prev):
+                max_node = self.give_maximum(curr.prev);
+                max_node.next = curr.next;
+                
+                replacement_node = curr.prev;
+                
+            if (connect_node == -1):
+                prev.prev = replacement_node;
+            else:
+                prev.next = replacement_node;
+                
+            #remove pseudo-node if the removed node was the roor
+            if (is_root):
+                self.root = prev.next;
+            
+            #remove the deleted node from the 'ref_list'
+            #NOTE: this makes the algorithm O(n)
+            idx = self.ref_list.index(curr);
+            self.ref_list.pop(idx);
+            
+            self.count -= 1;
+                            
+            return True;
+        
+        
     def give_predecessor(self, input_node):
         if (not input_node):
             return None;
@@ -192,4 +296,4 @@ class binary_tree:
             
 tree = binary_tree();
 tree.extend_tree([0, -1, 1, -3, -3, 3, 2, 5, 7]);
-print(tree.give_height());
+tree.print_tree();
