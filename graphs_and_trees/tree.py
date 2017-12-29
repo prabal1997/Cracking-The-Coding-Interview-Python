@@ -294,6 +294,6 @@ class binary_tree:
                         return curr_ref;
                 
             
-tree = binary_tree();
-tree.extend_tree([0, -1, 1, -3, -3, 3, 2, 5, 7]);
-tree.print_tree();
+#tree = binary_tree();
+#tree.extend_tree([0, -1, 1, -3, -3, 3, 2, 5, 7]);
+#tree.print_tree();

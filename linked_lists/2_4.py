@@ -57,4 +57,4 @@ for index in range(partition_start+1, len(input_list)):
 head = new_node.next;
     
 #print the output
-head.print_list();
+head.print_list()
