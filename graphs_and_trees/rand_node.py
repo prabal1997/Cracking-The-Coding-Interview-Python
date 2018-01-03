@@ -2,6 +2,7 @@ import sys
 from tree import binary_tree
 from random import randint
 
+
 #design a function that terminates at a random point on the graph
 def random_travel(tree):
     #basic error checking
